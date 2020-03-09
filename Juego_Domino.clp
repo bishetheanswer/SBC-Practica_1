@@ -70,17 +70,18 @@
 )
 
 
-(defrule R2 (declare (salience 9000))
-(npiezas ?jugador 0) ;si un jugador tiene cero cartas ha ganado la partida
+(defrule R2 (declare (salience 8000))
+(npiezas ?jugador 0) ;si un jugador tiene cero fichas ha ganado la partida
 =>
 (printout t "El jugador " ?jugador " gana la partida!" crlf)
 (halt) ;detiene el juego
 )
 
 ;Cuando pasan todos se acaba porque no hay movimientos se tienen que contar la puntuacion
-(defrule R3 (declare (salience 9000))
+(defrule R3 (declare (salience 8000))
 (pasadas 4)
 =>
+(printout "No hay movimientos" crlf)
 ;funcion recuento puntos
 (halt)
 )
@@ -103,11 +104,15 @@
 ?n <- (npiezas ?turno ?np)
 =>
 (printout t "El jugador " ?turno " inicia el juego con la pieza [6,6]!" crlf)
+
+(retract ?h ?t ?p ?n ?j)
 (assert (extremos 6 6))
 (assert (turno (+ 1 ?turno)))
 (assert (npiezas ?turno (- ?np 1)))
 (assert (juego 1))
-(retract ?j ?t ?p ?h ?n)
+
+
+(printout t "Turno: " ?turno crlf)
 )
 
 ;se comprueba si el primer numero de cada pieza del jugador coincide
@@ -121,11 +126,18 @@
 ?s <- (pasadas ?seguidas)
 =>    
 (printout t "El jugador " ?turno " pone la pieza [" ?n2 "," ?valor "]" crlf)
+
+(retract ?j ?t ?p ?h ?n ?s)
 (assert (extremos ?n2 ?e2))
 (assert (turno (+ 1 ?turno)))
 (assert (npiezas ?turno (- ?np 1)))
+(assert (juego 1))
 (assert (pasadas 0))
-(retract ?t ?p ?h ?n ?s)
+
+
+(printout t "Pasadas: " ?seguidas crlf)
+(printout t "Extremos " ?n2 "," ?e2 crlf)
+(printout t "Turno: " ?turno crlf)
 )
 
 
@@ -138,11 +150,18 @@
 ?s <- (pasadas ?seguidas)
 =>
 (printout t "El jugador " ?turno " pone la pieza [" ?n1 "," ?valor "]" crlf)
+
+(retract ?j ?t ?p ?h ?n ?s)
 (assert (extremos ?n1 ?e2))
 (assert (turno (+ 1 ?turno)))
 (assert (npiezas ?turno (- ?np 1)))
+(assert (juego 1))
 (assert (pasadas 0))
-(retract ?t ?p ?h ?n ?s)
+
+
+(printout t "Pasadas: " ?seguidas crlf)
+(printout t "Extremos " ?n1 "," ?e2 crlf)
+(printout t "Turno: " ?turno crlf)
 )
 
 
@@ -155,11 +174,18 @@
 ?s <- (pasadas ?seguidas)
 =>
 (printout t "El jugador " ?turno " pone la pieza [" ?valor "," ?n2 "]" crlf)
+
+(retract ?j ?t ?p ?h ?n ?s)
 (assert (extremos ?e1 ?n2))
 (assert (turno (+ 1 ?turno)))
 (assert (npiezas ?turno (- ?np 1)))
+(assert (juego 1))
 (assert (pasadas 0))
-(retract ?t ?p ?h ?n ?s)
+
+
+(printout t "Pasadas: " ?seguidas crlf)
+(printout t "Extremos " ?e1 "," ?n2 crlf)
+(printout t "Turno: " ?turno crlf)
 )
 
 
@@ -172,11 +198,18 @@
 ?s <- (pasadas ?seguidas)
 =>
 (printout t "El jugador " ?turno " pone la pieza [" ?valor "," ?n1 "]" crlf)
+
+(retract ?j ?t ?p ?h ?n ?s)
 (assert (extremos ?e1 ?n1))
 (assert (turno (+ 1 ?turno)))
 (assert (npiezas ?turno (- ?np 1)))
+(assert (juego 1))
 (assert (pasadas 0))
-(retract ?t ?p ?h ?n ?s)
+
+
+(printout t "Pasadas: " ?seguidas crlf)
+(printout t "Extremos " ?e1 "," ?n1 crlf)
+(printout t "Turno: " ?turno crlf)
 )
 
 ;Pasa turno porque no ha podido hacer movimientos
@@ -185,14 +218,19 @@
 ?s <- (pasadas ?seguidas)
 =>
 (printout t "El jugador " ?turno " pasa turno!" crlf)
+
+(retract ?t ?s)
 (assert (turno (+ 1 ?turno)))
 (assert (pasadas (+ 1 ?seguidas)))
-(retract ?t ?s)
+
+
+(printout t "Turno: " ?turno crlf)
+(printout t "Pasadas: " ?seguidas crlf)
 )
 
 (deffacts TURNOS (turno 1))
 ;Comienza el jugador 1 por defecto, ojo no quiere decir que empiece realmente
-(deffacts EXTREMOS (extremos 0 0))
+(deffacts EXTREMOS (extremos -1 -1))
 ;Tablero inicial
 (deffacts INICIO (juego -1))
 ;Flag estado de juego: -1 = preload, 0 = ini 
