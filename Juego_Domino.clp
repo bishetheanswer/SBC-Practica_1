@@ -113,13 +113,14 @@
 ;se comprueba si el primer numero de cada pieza del jugador coincide
 ;con el primer numero de las fichas colocadas
 (defrule R6 (declare (salience 5000))
+?j <- (juego 1)
 ?t <- (turno ?turno)
 ?p <- (pieza ?turno ?valor ?n2)
 ?h <- (extremos ?valor ?e2)
 ?n <- (npiezas ?turno ?np)
 ?s <- (pasadas ?seguidas)
 =>    
-(printout t "El jugador " ?turno " pone la pieza [" ?valor "," ?n2 "]" crlf)
+(printout t "El jugador " ?turno " pone la pieza [" ?n2 "," ?valor "]" crlf)
 (assert (extremos ?n2 ?e2))
 (assert (turno (+ 1 ?turno)))
 (assert (npiezas ?turno (- ?np 1)))
@@ -129,6 +130,7 @@
 
 
 (defrule R7 (declare (salience 5000))
+?j <- (juego 1)
 ?t <- (turno ?turno)
 ?p <- (pieza ?turno ?n1 ?valor)
 ?h <- (extremos ?valor ?e2)
@@ -145,6 +147,7 @@
 
 
 (defrule R8 (declare (salience 5000))
+?j <- (juego 1)
 ?t <- (turno ?turno)
 ?p <- (pieza ?turno ?valor ?n2)
 ?h <- (extremos ?e1 ?valor)
@@ -161,13 +164,14 @@
 
 
 (defrule R9 (declare (salience 5000))
+?j <- (juego 1)
 ?t <- (turno ?turno)
 ?p <- (pieza ?turno ?n1 ?valor)
 ?h <- (extremos ?e1 ?valor)
 ?n <- (npiezas ?turno ?np)
 ?s <- (pasadas ?seguidas)
 =>
-(printout t "El jugador " ?turno " pone la pieza [" ?n1 "," ?valor "]" crlf)
+(printout t "El jugador " ?turno " pone la pieza [" ?valor "," ?n1 "]" crlf)
 (assert (extremos ?e1 ?n1))
 (assert (turno (+ 1 ?turno)))
 (assert (npiezas ?turno (- ?np 1)))
@@ -188,7 +192,7 @@
 
 (deffacts TURNOS (turno 1))
 ;Comienza el jugador 1 por defecto, ojo no quiere decir que empiece realmente
-(deffacts EXTREMOS (extremos 6 6))
+(deffacts EXTREMOS (extremos 0 0))
 ;Tablero inicial
 (deffacts INICIO (juego -1))
 ;Flag estado de juego: -1 = preload, 0 = ini 
